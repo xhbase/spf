@@ -39,6 +39,23 @@ func TestNewSPF(t *testing.T) {
 	}
 }
 
+func TestSPFTestXhbase(t *testing.T) {
+	tests := []spftest{
+		spftest{"192.174.81.96", "noreply+bac0a7452a2109797392d93f4927ce4685d3169840347e5ef7df16f5@am.atlassian.com", Pass},
+		spftest{"192.174.81.96", "noreply+bac0a7452a2109797392d93f4927ce4685d3169840347e5ef7df16f5@am.atlassian.com", Pass},
+	}
+
+	for _, expected := range tests {
+		actual, err := SPFTest(expected.server, expected.email)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if actual != expected.result {
+			t.Error("For", expected.server, "at", expected.email, "Expected", expected.result, "got", actual)
+		}
+	}
+}
 func TestSPFTest(t *testing.T) {
 	tests := []spftest{
 		spftest{"127.0.0.1", "info@google.com", SoftFail},
@@ -46,6 +63,7 @@ func TestSPFTest(t *testing.T) {
 		spftest{"35.190.247.0", "info@google.com", Pass},
 		spftest{"172.217.0.0", "info@_netblocks3.google.com", Pass},
 		spftest{"172.217.0.0", "info@google.com", Pass},
+		spftest{"192.174.81.96", "noreply+bac0a7452a2109797392d93f4927ce4685d3169840347e5ef7df16f5@am.atlassian.com", Pass},
 		spftest{"1.1.1.1", "admin@pchome.com.tw", PermError},
 	}
 
