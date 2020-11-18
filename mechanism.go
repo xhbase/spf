@@ -140,7 +140,10 @@ func (m *Mechanism) Evaluate(ip string, count int) (Result, error) {
 	case "all":
 		return m.Result, nil
 	case "exists":
-		_, err := net.LookupHost(m.Domain)
+		domain := strings.ReplaceAll(m.Domain, "%{i}", ip)
+		fmt.Println("domain=", domain)
+
+		_, err := net.LookupHost(domain)
 		if err == nil {
 			return m.Result, nil
 		}
